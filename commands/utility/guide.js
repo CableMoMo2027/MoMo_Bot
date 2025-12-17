@@ -92,7 +92,7 @@ module.exports = {
         if (!query) {
             return interaction.reply({
                 content: '📚 Discord.js Guide: https://discordjs.guide/',
-                ephemeral: true
+                flags: 64
             });
         }
 

@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('stop')
+        .setName('clear')
         .setDescription('หยุดเล่นเพลงและล้างคิวทั้งหมด'),
-    
+
     async execute(interaction, client) {
         // ตรวจสอบว่าผู้ใช้อยู่ใน voice channel หรือไม่
         const member = interaction.member;
@@ -13,7 +13,7 @@ module.exports = {
         if (!voiceChannel) {
             return interaction.reply({
                 content: '❌ คุณต้องเข้า Voice Channel ก่อนใช้คำสั่งนี้!',
-                ephemeral: true
+                flags: 64
             });
         }
 
@@ -23,7 +23,7 @@ module.exports = {
         if (!player) {
             return interaction.reply({
                 content: '❌ ไม่มีเพลงกำลังเล่นอยู่!',
-                ephemeral: true
+                flags: 64
             });
         }
 
@@ -31,7 +31,7 @@ module.exports = {
         if (voiceChannel.id !== player.voiceChannel) {
             return interaction.reply({
                 content: '❌ คุณต้องอยู่ใน Voice Channel เดียวกันกับบอท!',
-                ephemeral: true
+                flags: 64
             });
         }
 
@@ -39,6 +39,12 @@ module.exports = {
         player.stop();
         player.queue.clear();
 
-        await interaction.reply('⏹️ หยุดเล่นเพลงและล้างคิวแล้ว!');
+        const embed = new EmbedBuilder()
+            .setColor('#5865F2')
+            .setAuthor({ name: 'ล้างคิวแล้ว', iconURL: interaction.user.displayAvatarURL() })
+            .setDescription('⏹️ หยุดเล่นเพลงและล้างคิวทั้งหมดเรียบร้อย')
+            .setTimestamp();
+
+        await interaction.reply({ embeds: [embed] });
     }
 };

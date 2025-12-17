@@ -11,9 +11,11 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
     ]
 });
+
 // Load commands
 client.commands = new Collection();
 client.cooldowns = new Collection();
+client.musicQueues = new Map(); 
 
 const commandsPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandsPath, { withFileTypes: true })
@@ -52,7 +54,7 @@ client.riffy = new Riffy(client, [
         const guild = client.guilds.cache.get(payload.d.guild_id);
         if (guild) guild.shard.send(payload);
     },
-    defaultSearchPlatform: "ytmsearch", // ใช้ YouTube Music เป็นค่าเริ่มต้น
+    defaultSearchPlatform: process.env.LAVALINK_SEARCHPLAT, // ใช้ YouTube Music เป็นค่าเริ่มต้น
     restVersion: "v4"
 });
 const eventsPath = path.join(__dirname, 'events');
@@ -73,9 +75,9 @@ client.riffy.on('nodeError', (node, error) => {
     nodeError.execute(client, node, error);
 });
 
-// client.on('raw', (d) => {
-//     client.riffy.updateVoiceState(d);
-// });
+client.on('raw', (d) => {
+    client.riffy.updateVoiceState(d);
+});
 
 // ฟังก์ชันโหลด events แบบ recursive
 function loadEvents(dir) {

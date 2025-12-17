@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('next')
+        .setName('skip')
         .setDescription('ข้ามไปเล่นเพลงถัดไปในคิว'),
-    
+
     async execute(interaction, client) {
         // ตรวจสอบว่าผู้ใช้อยู่ใน voice channel หรือไม่
         const member = interaction.member;
@@ -13,7 +13,7 @@ module.exports = {
         if (!voiceChannel) {
             return interaction.reply({
                 content: '❌ คุณต้องเข้า Voice Channel ก่อนใช้คำสั่งนี้!',
-                ephemeral: true
+                flags: 64
             });
         }
 
@@ -23,7 +23,7 @@ module.exports = {
         if (!player) {
             return interaction.reply({
                 content: '❌ ไม่มีเพลงกำลังเล่นอยู่!',
-                ephemeral: true
+                flags: 64
             });
         }
 
@@ -35,17 +35,26 @@ module.exports = {
             });
         }
 
-        // ตรวจสอบว่ามีเพลงในคิวหรือไม่
-        if (player.queue.size === 0) {
-            return interaction.reply({
-                content: '❌ ไม่มีเพลงถัดไปในคิว!',
-                ephemeral: true
-            });
-        }
+        // ดึงเพลงถัดไปก่อน skip
+        const nextTrack = player.queue[0];
 
         // ข้ามไปเพลงถัดไป
         player.stop();
 
-        await interaction.reply('⏭️ ข้ามไปเพลงถัดไป!');
+        let description = '⏭️ ข้ามเพลงแล้ว';
+        if (nextTrack) {
+            description = `⏭️ ข้ามไปเล่น **[${nextTrack.info.title}](${nextTrack.info.uri})**`;
+        } else {
+            description = '⏭️ ข้ามเพลงแล้ว (ไม่มีเพลงถัดไปในคิว)';
+        }
+
+        const embed = new EmbedBuilder()
+            .setColor('#5865F2')
+            .setAuthor({ name: 'ข้ามเพลง', iconURL: interaction.user.displayAvatarURL() })
+            .setDescription(description)
+            .setThumbnail(nextTrack?.info?.artworkUrl || nextTrack?.info?.thumbnail || null)
+            .setTimestamp();
+
+        await interaction.reply({ embeds: [embed] });
     }
 };
