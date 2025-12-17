@@ -16,10 +16,15 @@ A Discord bot built with Discord.js that provides fun and utility commands for D
 - **user** - User information
 
 ### Music Commands
-- **play** - Play music from YouTube or URL
-- **stop** - Stop playing music
-- **next** - Skip to the next song
-- **disconnect** - Disconnect bot from voice channel
+- **play** - Play music from YouTube, Spotify, or URL (supports playlists)
+- **queue** - View the current music queue with pagination
+- **playqueue** - Select and play a specific song from the queue
+- **skip** - Skip to the next song in the queue
+- **pause** - Pause/Resume the current song
+- **loop** - Toggle loop mode (off/track/queue)
+- **clear** - Clear all songs from the queue
+- **leave** - Disconnect bot from voice channel
+- **247** - Toggle 24/7 mode (bot stays in voice channel)
 
 ### Fun Commands
 - **dog** - Get cute pictures of dogs (with breed options, supports multiple languages: Polish, German)
@@ -99,10 +104,15 @@ MoMo_Bot/
 │   │   ├── dog.js
 │   │   └── gif.js
 │   ├── music/              # Music commands (Lavalink-based)
-│   │   ├── play.js
-│   │   ├── stop.js
-│   │   ├── next.js
-│   │   └── disconnect.js
+│   │   ├── play.js         # Play music from URL/search
+│   │   ├── queue.js        # View queue with pagination
+│   │   ├── playqueue.js    # Select song from queue to play
+│   │   ├── skip.js         # Skip current song
+│   │   ├── pause.js        # Pause/Resume playback
+│   │   ├── loop.js         # Loop mode (off/track/queue)
+│   │   ├── clear.js        # Clear the queue
+│   │   ├── leave.js        # Disconnect from voice
+│   │   └── 247.js          # 24/7 mode toggle
 │   └── utility/            # Utility commands
 │       ├── echo.js
 │       ├── guide.js
